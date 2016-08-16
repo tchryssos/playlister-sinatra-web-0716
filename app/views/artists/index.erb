@@ -1,6 +1,8 @@
 <p> Hey whaddup </p>
 
+<ul>
 <% @artists.each do |artist| %>
-<%=artist.name %>
-<a href='/artists/<%=artist.slug%>'><%=artist.name %></a>
+	<li><a href='/artists/<%=artist.slug%>'><%=artist.name %></a></li>
 <% end %>
+
+</ul>
