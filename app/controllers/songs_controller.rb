@@ -4,52 +4,33 @@ class SongsController < ApplicationController
 
   get '/songs' do
     @songs=Song.all
-    # binding.pry
     erb :'/songs/index'
   end
 
-
-
   post '/songs' do 
-    # binding.pry
-    @song = Song.create(name:params[:song][:name])
+    @song = Song.create(params[:song])
 
-    artist = Artist.where("name LIKE ?", "%#{params[:song][:artist][:name]}")
-    if artist.empty?
-      Artist.create(name: params[:song][:artist][:name])
-      @song.artist = artist.first
+    if Artist.find_by(params[:artist]) == nil
+      new_artist = Artist.create(params[:artist])
+      @song.artist = new_artist
     else
-      @song.artist = artist.first
+      @song.artist = Artist.find_by(params[:artist])
     end
+
     @song.save
-    # binding.pry
-    if params[:song][:genres][:name] != [""]
-      new_genre = Genre.create(name: params[:song][:genres][:name][0])
-
-      @song.genres << new_genre
-
+    if params[:genres][0][:name] != ""    
+      @song.genres << Genre.create(params[:genres])
       @song.save
     end
-      # binding.pry
-      params[:song][:genres][:genre_ids].each do |genre_id|
-        @song.genres << Genre.find(genre_id)
-      end
-
-    # binding.pry
-    @song.save
 
     redirect "/songs/#{@song.slug}"
 
   end
 
 
-
   get '/songs/new' do 
-
     erb :'/songs/new'
   end
-
-
 
 
   get '/songs/:slug' do
@@ -66,29 +47,28 @@ class SongsController < ApplicationController
   patch '/songs/:slug' do 
     @song = Song.find_by_slug(params["slug"])
 
-    artist = Artist.where("name LIKE ?", "%#{params[:song][:artist][:name]}")
-    if artist.empty?
-      Artist.create(name: params[:song][:artist][:name])
-      @song.artist = artist.first
+    # artist = Artist.where("name LIKE ?", "%#{params[:artist][:name]}") / if artist.empty?
+    if Artist.find_by(params[:artist]) == nil
+      new_artist = Artist.create(params[:artist])
+      @song.artist = new_artist
     else
-      @song.artist = artist.first
+      @song.artist = Artist.find_by(params[:artist])
     end
     @song.save
-    if params[:song][:genres][:name] != [""]
-      new_genre = Genre.create(name: params[:song][:genres][:name][0])
 
+    if params[:genres][0][:name] != ""
+      new_genre = Genre.create(params[:genres])
       @song.genres << new_genre
-
       @song.save
     end
-      # binding.pry
-      params[:song][:genres][:genre_ids].each do |genre_id|
-        @song.genres << Genre.find(genre_id)
-      end
 
-      @song.name = params[:song][:name]
-
-      @song.save
+    @song.update(params[:song])
+      # We don't need this anymore because params[:artists][genre_ids] automatically assigns the genres
+      # params[:song][:genre_ids].each do |genre_id|
+      #   @song.genres << Genre.find(genre_id)
+      # end
+      # @song.name = params[:song][:name]
+      # @song.save
 
     erb :"/songs/show"
   end

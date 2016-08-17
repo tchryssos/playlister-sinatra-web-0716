@@ -1,6 +1,7 @@
-<p> still whaddup </p>
+<h2> Genres </h2>
 
+<ul>
 <% @genres.each do |genre| %>
-<%=genre.name %>
-<a href='/genres/<%=genre.slug%>'><%=genre.name %></a>
+<li><h3><a href='/genres/<%=genre.slug%>'><%=genre.name %></a></h3></li>
 <% end %>
+</ul>

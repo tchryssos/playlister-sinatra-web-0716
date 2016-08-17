@@ -5,17 +5,17 @@
 <input type="text" name="song[name]" id="Name">
 <br>
 <label>Artist name:</label>
-<input type="text" name="song[artist][name]" id="Artist Name">
+<input type="text" name="artist[name]" id="Artist Name">
 <br>
 <label>Check genres that apply:</label>
 <% Genre.all.each do |genre| %>
-	<input type="checkbox" id = "<%= genre.name %>" name="song[genres][genre_ids][]" value="<%= genre.id %>">
+	<input type="checkbox" id = "<%= genre.name %>" name="song[genre_ids][]" value="<%= genre.id %>">
 		<%= genre.name %>
 	</input>
 <% end %>
 <br>
 <label>-OR!- Create a new genre:</label>
-<input type="text" name="song[genres][name][]" id="new_genre">
+<input type="text" name="genres[][name]" id="new_genre">
 
 <br>
 <input type="submit" value="Create">
